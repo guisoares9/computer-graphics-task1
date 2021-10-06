@@ -12,9 +12,12 @@ window = gh.setWindow(600, 600, "Triangle")
 # Configure shaders and construct variables
 program = gh.setGPU()
 
-points = objs.Ship()
 
-vertices = np.zeros(len(points), [("position", np.float32, 2)])
+ship = objs.Ship()
+world = objs.World()
+
+total_len = len(ship) + len(world)
+vertices = np.zeros(total_len, [("position", np.float32, 2)])
 # preenchendo as coordenadas de cada vértice
 # vertices['position'] = [
 #                         ( 0.0, 0.0), # vertice 0
@@ -24,7 +27,8 @@ vertices = np.zeros(len(points), [("position", np.float32, 2)])
 #                         (-0.5, 0.0), # vertice 4
 #                         (+1.0,-1.0)  # vertice 5
 #                     ]
-vertices['position'] = points
+vertices['position'][:len(ship)] = ship
+vertices['position'][len(ship):len(vertices)] = world
 
 # Sets the GPU Buffer
 gh.setGPUBuffer( program, vertices )
@@ -44,15 +48,19 @@ while not glfw.window_should_close(window):
     glClear(GL_COLOR_BUFFER_BIT)
     glClearColor(1.0,1.0,1.0,1.0)
 
-    loc = glGetUniformLocation(program, "mat_transformation")
+    # loc = glGetUniformLocation(program, "mat_transformation")
     
     glUniform4f(loc_color, R, G, B, 1.0)
-    glDrawArrays(GL_TRIANGLES, 0, len(vertices)-4)
+    glDrawArrays(GL_TRIANGLES, 0, len(ship)-4)
     glUniform4f(loc_color, R, G, B, 1.0)
-    glDrawArrays(GL_TRIANGLES, 1, len(vertices)-3)
+    glDrawArrays(GL_TRIANGLES, 1, len(ship)-3)
+    glUniform4f(loc_color, 0, 0, 0, 1.0)
+    glDrawArrays(GL_TRIANGLES, 4, len(ship))
     glUniform4f(loc_color, R, G, B, 1.0)
-    glDrawArrays(GL_TRIANGLES, 4, len(vertices))
+
     glUniform4f(loc_color, R, G, B, 1.0)
+    glDrawArrays(GL_TRIANGLE_STRIP, len(ship), len(world))
+
 
     glfw.swap_buffers(window)
 

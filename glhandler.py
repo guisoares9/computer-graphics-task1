@@ -35,21 +35,20 @@ def setWindow(width, height, name):
 def setGPU():
     # GLSL para Vertex Shader
     vertex_code = """
-            attribute vec2 position;
-            uniform mat4 mat_transformation;
-            void main(){
-                gl_Position = mat_transformation * vec4(position,0.0,1.0);
-            }
-            """
+        attribute vec2 position;
+        void main(){
+            gl_Position = vec4(position,0.0,1.0);
+        }
+        """
 
-        # GLSL para Fragment Shader
+    # GLSL para Fragment Shader
     fragment_code = """
-            uniform vec4 color;
-            void main(){
-                gl_FragColor = color;
-            }
-            """
-            
+        uniform vec4 color;
+        void main(){
+            gl_FragColor = color;
+        }
+        """
+        
     # Request a program and shader slots from GPU
     program  = glCreateProgram()
     vertex   = glCreateShader(GL_VERTEX_SHADER)
@@ -132,7 +131,7 @@ if __name__ == '__main__':
     setGPUBuffer( program, vertices )
 
 
-    # loc_color = glGetUniformLocation(program, "color")
+    loc_color = glGetUniformLocation(program, "color")
 
     glfw.show_window(window)
 
@@ -144,7 +143,7 @@ if __name__ == '__main__':
     
         glClearColor(1.0, 1.0, 1.0, 1.0)
 
-        # glUniform4f(loc_color, 0.0, 1.0, 1.0, 1.0) 
+        glUniform4f(loc_color, 0.0, 1.0, 1.0, 1.0) 
         
         glDrawArrays(GL_TRIANGLES, 0, len(vertices)) 
 
