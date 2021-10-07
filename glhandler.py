@@ -3,28 +3,28 @@ from OpenGL.GL import *
 import OpenGL.GL.shaders
 import numpy as np
 
-t_x = 0
-t_y = 0
+dt_x, dt_y = 0, 0
+dtheta = 0
 
-theta = 0
+dtheta = 0
 
 # Capturando eventos de teclado e mouse
 def key_event(window,key,scancode,action,mods):
     
-    global t_x, t_y, theta
+    global dt_x, dt_y, dtheta
 
     if (key == 265) | (key == 87):
-        t_y += 0.02
+        dt_y = +0.02
     if (key == 264) | (key == 83):
-        t_y -= 0.02
+        dt_y = -0.02
     if (key == 263) | (key == 65):
-        t_x -= 0.02
+        dt_x = -0.02
     if (key == 262) | (key == 68):
-        t_x += 0.02
+        dt_x = +0.02
     if (key == 81):
-        theta += 0.1
+        dtheta = +0.1
     if (key == 69):
-        theta -= 0.1
+        dtheta = -0.1
 
 
     print('[key event] key=',key)
