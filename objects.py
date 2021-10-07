@@ -141,3 +141,7 @@ def Ship():
     (0.05, 0.07)
     ]
     return np.array(ship)
+
+def Stars():
+    stars = 100*(np.random.rand(1000000, 2))-100*(np.random.rand(1000000, 2))
+    return np.array(stars)
