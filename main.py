@@ -18,10 +18,11 @@ planet, continent = objs.Planet(), objs.Continent()
 sun, moon = objs.Sun(), objs.Moon()
 stars = objs.Stars()
 
-# Sets the vertices array size
+# Sets 'vertices' array size
 total_len = len(ship) + len(planet) + len(continent) + len(sun) + len(moon) + len(stars)
 vertices = np.zeros(total_len, [("position", np.float32, 2)])
 
+# Fill 'vertices' with the objects points
 aux0 = 0
 aux1 = len(stars)
 vertices['position'][aux0:aux1] = stars
@@ -41,34 +42,29 @@ aux0 = aux1
 aux1 += len(ship)
 vertices['position'][aux0:aux1] = ship
 
-
 # Sets the GPU Buffer
 gh.setGPUBuffer(program, vertices)
 
 loc_color = glGetUniformLocation(program, "color")
 
-R = 1
-G = 0
-B = 0
-
 glfw.show_window(window)
 
 t0 = time.time()
-while not glfw.window_should_close(window):
 
-    t = time.time() - t0
+while not glfw.window_should_close(window):
 
     glfw.poll_events()
 
     glClear(GL_COLOR_BUFFER_BIT)
     glClearColor(0.005, 0.01, 0.1, 1.0)
 
-    tx = gh.t_x
-    ty = gh.t_y
+    # Get info from keyboard
+    tx, ty = gh.t_x, gh.t_y
+    Theta = gh.theta
 
     loc = glGetUniformLocation(program, "mat_transformation")
     
-# stars
+# Stars
     mat_transform = trans.createEyeMat()
     # #mat_transform = trans.scale(1/(d+2), 1/(d+2), mat_transform)
     mat_transform = trans.scale(1, 1, mat_transform)
@@ -102,7 +98,7 @@ while not glfw.window_should_close(window):
     glUniform4f(loc_color, R, G, B, 1.0)
     glDrawArrays(GL_TRIANGLES, len(planet)+len(stars), len(continent))
 
-# sun
+# Sun
     mat_transform = trans.createEyeMat()
     mat_transform = trans.scale(0.15, 0.15, mat_transform)
     mat_transform = trans.translate(-0.7, 0.7, mat_transform)
@@ -111,7 +107,8 @@ while not glfw.window_should_close(window):
     glUniform4f(loc_color, R, G, B, 1.0)
     glDrawArrays(GL_TRIANGLE_FAN, len(stars) + len(planet) + len(continent), len(sun))
 
-# moon
+# Moon
+    t = time.time() - t0    
     mat_transform = trans.createEyeMat()
     mat_transform = trans.scale(0.15, 0.15, mat_transform)
     mat_transform = trans.translate(0.9, 0, mat_transform)
@@ -122,10 +119,18 @@ while not glfw.window_should_close(window):
     glUniform4f(loc_color, R, G, B, 1.0)
     glDrawArrays(GL_TRIANGLE_FAN, len(stars) + len(planet) + len(continent) + len(sun), len(moon))
 
-    # Ship
+# Ship
     mat_transform = trans.createEyeMat()
     mat_transform = trans.scale(2, 2, mat_transform)
+    mat_transform = trans.translate(-0.1, -0.1, mat_transform)
+
+    mat_transform = trans.rotateZ(Theta, mat_transform)
+    
     mat_transform = trans.translate(tx, ty, mat_transform)
+    #
+
+    #mat_transform = trans.translate(tx+.05*(np.cos(Theta)-np.sin(Theta)), ty+.05*(np.cos(Theta)+np.sin(Theta)), mat_transform)
+    
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
     R, G, B = 1, 0, 0
     glUniform4f(loc_color, R, G, B, 1.0)

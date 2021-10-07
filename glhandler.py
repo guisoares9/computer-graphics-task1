@@ -3,22 +3,31 @@ from OpenGL.GL import *
 import OpenGL.GL.shaders
 import numpy as np
 
-t_x = 0
-t_y = 0
+t_x,t_y = 0, 0
+theta = 0
 
 # Capturando eventos de teclado e mouse
 def key_event(window,key,scancode,action,mods):
     
-    global t_x, t_y
+    global t_x, t_y, theta
 
-    if (key == 265) | (key == 87):
-        t_y += 0.02
-    if (key == 264) | (key == 83):
-        t_y -= 0.02
-    if (key == 263) | (key == 65):
-        t_x -= 0.02
-    if (key == 262) | (key == 68):
-        t_x += 0.02
+    speed = .05 # Spaceship translation speed
+    omega = .1 # Spaceship rotation speed
+
+    if action != 0: # Ignores the button release state
+
+        if (key == 265) | (key == 87): # W or UpArrow
+            t_y += speed*(np.cos(theta)+np.sin(theta))
+        if (key == 264) | (key == 83): # S or DownArrow
+            t_y -= speed*(np.cos(theta)+np.sin(theta))
+        if (key == 263) | (key == 65): # A or LeftArrow
+            t_x -= speed*(np.cos(theta)-np.sin(theta))
+        if (key == 262) | (key == 68): # D or RightArrow
+            t_x += speed*(np.cos(theta)-np.sin(theta))
+        if (key == 81): # Q
+            theta += omega
+        if (key == 69): # E
+            theta -= omega
 
     print('[key event] key=',key)
     print('[key event] scancode=',scancode)
