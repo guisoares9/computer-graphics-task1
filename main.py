@@ -1,7 +1,7 @@
 # Grupo:
 #     Caio Brandolim Rovetta      11232156
-#     Guilherme Soares Silvestre
-#     Calvin Suzuki de Camargo
+#     Guilherme Soares Silvestre  11299832
+#     Calvin Suzuki de Camargo    11232420
 
 import glhandler as gh
 import objects as objs
