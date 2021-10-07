@@ -5,8 +5,23 @@ import numpy as np
 
 from transform import Transform
 
+t_x = 0
+t_y = 0
+
 # Capturando eventos de teclado e mouse
 def key_event(window,key,scancode,action,mods):
+    
+    global t_x, t_y
+
+    if key == 265:
+        t_y += 0.02
+    if key == 264:
+        t_y -= 0.02
+    if key == 263:
+        t_x -= 0.02
+    if key == 262:
+        t_x += 0.02
+
     print('[key event] key=',key)
     print('[key event] scancode=',scancode)
     print('[key event] action=',action)
@@ -36,8 +51,9 @@ def setGPU():
     # GLSL para Vertex Shader
     vertex_code = """
         attribute vec2 position;
+        uniform mat4 mat_transformation;
         void main(){
-            gl_Position = vec4(position,0.0,1.0);
+            gl_Position = mat_transformation * vec4(position,0.0,1.0);
         }
         """
 
