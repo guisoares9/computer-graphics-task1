@@ -3,8 +3,6 @@ from OpenGL.GL import *
 import OpenGL.GL.shaders
 import numpy as np
 
-from transform import Transform
-
 t_x = 0
 t_y = 0
 

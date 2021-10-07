@@ -11,8 +11,17 @@ def simpleTest():
 
     return points
 
-def World():
-    world = [
+def Planet():
+    planet = np.zeros((101,2))
+    # preenchendo as coordenadas do pentagrama
+    for counter in range(101):
+        angle = (2 * np.pi / 100) * counter
+        x,y = np.cos(angle),  np.sin(angle)
+        planet[counter] = [x,y]
+    return planet
+
+def Continent():
+    continent = [
         (0.1255581498995, -0.9347072861906),
         (0.0720809719474, -0.8478068720184),
         (0.1188735026555, -0.8210682830423),
@@ -101,13 +110,27 @@ def World():
         (-0.0315310603348, -0.7274832216262),
         (0, -0.8511491956404)
     ]
-    return np.array(world)
+    return np.array(continent)
 
 def Sun():
-    pass
+    
+    sun = np.zeros((101,2))
+    # preenchendo as coordenadas do pentagrama
+    for counter in range(101):
+        angle = (2 * np.pi / 100) * counter
+        x,y = np.cos(angle),  np.sin(angle)
+        sun[counter] = [x,y]
+    return sun
 
 def Moon():
-    pass
+    
+    moon = np.zeros((101,2))
+    # preenchendo as coordenadas do pentagrama
+    for counter in range(101):
+        angle = (2 * np.pi / 100) * counter
+        x,y = np.cos(angle),  np.sin(angle)
+        moon[counter] = [x,y]
+    return moon
 
 def Ship():
     ship =  [

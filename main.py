@@ -1,6 +1,7 @@
 import glhandler as gh
 import objects as objs
 import transform as trans
+import time
 
 import numpy as np
 import glfw
@@ -14,21 +15,30 @@ program = gh.setGPU()
 
 
 ship = objs.Ship()
-world = objs.World()
+planet = objs.Planet()
+continent = objs.Continent()
+sun = objs.Sun()
+moon = objs.Moon()
 
-total_len = len(ship) + len(world)
+
+total_len = len(ship) + len(planet) + len(continent) + len(sun) + len(moon)
 vertices = np.zeros(total_len, [("position", np.float32, 2)])
-# preenchendo as coordenadas de cada vértice
-# vertices['position'] = [
-#                         ( 0.0, 0.0), # vertice 0
-#                         (+0.5,+0.5), # vertice 1
-#                         (+0.5, 0.0), # vertice 2
-#                         (-1.0,-1.0), # vertice 3
-#                         (-0.5, 0.0), # vertice 4
-#                         (+1.0,-1.0)  # vertice 5
-#                     ]
-vertices['position'][:len(ship)] = ship
-vertices['position'][len(ship):len(vertices)] = world
+
+aux0 = 0
+aux1 = len(ship)
+vertices['position'][aux0:aux1] = ship
+aux0 = aux1
+aux1 += len(planet)
+vertices['position'][aux0:aux1] = planet
+aux0 = aux1
+aux1 += len(continent)
+vertices['position'][aux0:aux1] = continent
+aux0 = aux1
+aux1 += len(sun)
+vertices['position'][aux0:aux1] = sun
+aux0 = aux1
+aux1 += len(moon)
+vertices['position'][aux0:aux1] = moon
 
 # Sets the GPU Buffer
 gh.setGPUBuffer(program, vertices )
@@ -41,7 +51,10 @@ B = 0
 
 glfw.show_window(window)
 
+t0 = time.time()
 while not glfw.window_should_close(window):
+
+    t = time.time() - t0
 
     glfw.poll_events() 
     
@@ -51,16 +64,15 @@ while not glfw.window_should_close(window):
     tx = gh.t_x
     ty = gh.t_y
 
+# Ship
 ####################################################################
-    mat_translation = np.array([1.0, 0.0, 0.0, tx,
-                                0.0, 1.0, 0.0, ty,
-                                0.0, 0.0, 1.0, 0.0,
-                                0.0, 0.0, 0.0, 1.0], np.float32)
-
     loc = glGetUniformLocation(program, "mat_transformation")
 
-    glUniformMatrix4fv(loc, 1, GL_TRUE, mat_translation)
-    
+    mat_transform = trans.createEyeMat()
+    mat_transform = trans.scale(2, 2, mat_transform)
+    mat_transform = trans.translate(tx, ty, mat_transform)
+    glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
+    R, G, B = 1, 0, 0
     glUniform4f(loc_color, R, G, B, 1.0)
     glDrawArrays(GL_TRIANGLES, 0, len(ship)-4)
     glUniform4f(loc_color, R, G, B, 1.0)
@@ -69,15 +81,51 @@ while not glfw.window_should_close(window):
     glDrawArrays(GL_TRIANGLES, 4, 3)
 ####################################################################
 
+# Planet
 ####################################################################
     d = tx**2 + ty**2
-    mat_translation = np.array([1/(d+1), 0.0, 0.0, 0,
-                                0.0, 1/(d+1), 0.0, 0,
-                                0.0, 0.0, 1.0, 0.0,
-                                0.0, 0.0, 0.0, 1.0], np.float32)
-    glUniformMatrix4fv(loc, 1, GL_TRUE, mat_translation)
+    mat_transform = trans.createEyeMat()
+    # mat_transform = trans.scale(1/(d+2), 1/(d+2), mat_transform)
+    mat_transform = trans.scale(1/2, 1/2, mat_transform)
+    mat_transform = trans.translate(0, -0.5, mat_transform)
+    glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
+    R, G, B = 0, 0, 1
     glUniform4f(loc_color, R, G, B, 1.0)
-    glDrawArrays(GL_LINE_LOOP, len(ship), len(world))
+    glDrawArrays(GL_TRIANGLE_FAN, len(ship), len(planet))
+####################################################################
+
+# Continent
+####################################################################
+    mat_transform = trans.createEyeMat()
+    # mat_transform = trans.scale(1/(d+2), 1/(d+2), mat_transform)
+    mat_transform = trans.scale(1/2, 1/2, mat_transform)
+    mat_transform = trans.translate(0, -0.5, mat_transform)
+    glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
+    R, G, B = 0, 1, 0
+    glUniform4f(loc_color, R, G, B, 1.0)
+    glDrawArrays(GL_LINE_LOOP, len(ship) + len(planet), len(continent))
+####################################################################
+
+####################################################################
+    mat_transform = trans.createEyeMat()
+    mat_transform = trans.scale(0.15, 0.15, mat_transform)
+    mat_transform = trans.translate(-0.7, 0.7, mat_transform)
+    glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
+    R, G, B = 1, 0.7, 0
+    glUniform4f(loc_color, R, G, B, 1.0)
+    glDrawArrays(GL_TRIANGLE_FAN, len(ship) + len(planet) + len(continent), len(sun))
+
+####################################################################
+    mat_transform = trans.createEyeMat()
+    mat_transform = trans.scale(0.15, 0.15, mat_transform)
+    mat_transform = trans.translate(0.9, 0, mat_transform)
+    mat_transform = trans.rotateZ(t, mat_transform)
+    mat_transform = trans.translate(0.0, -0.5, mat_transform)
+
+    glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
+    R, G, B = 0.3, 0.3, 0.3
+    glUniform4f(loc_color, R, G, B, 1.0)
+    glDrawArrays(GL_TRIANGLE_FAN, len(ship) + len(planet) + len(continent) + len(sun), len(moon))
 ####################################################################
 
     glfw.swap_buffers(window)
