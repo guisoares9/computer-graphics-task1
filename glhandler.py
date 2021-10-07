@@ -6,10 +6,12 @@ import numpy as np
 t_x = 0
 t_y = 0
 
+theta = 0
+
 # Capturando eventos de teclado e mouse
 def key_event(window,key,scancode,action,mods):
     
-    global t_x, t_y
+    global t_x, t_y, theta
 
     if (key == 265) | (key == 87):
         t_y += 0.02
@@ -19,6 +21,11 @@ def key_event(window,key,scancode,action,mods):
         t_x -= 0.02
     if (key == 262) | (key == 68):
         t_x += 0.02
+    if (key == 81):
+        theta += 0.1
+    if (key == 69):
+        theta -= 0.1
+
 
     print('[key event] key=',key)
     print('[key event] scancode=',scancode)

@@ -51,6 +51,9 @@ R = 1
 G = 0
 B = 0
 
+tx = gh.t_x
+ty = gh.t_y
+
 glfw.show_window(window)
 
 t0 = time.time()
@@ -63,8 +66,9 @@ while not glfw.window_should_close(window):
     glClear(GL_COLOR_BUFFER_BIT)
     glClearColor(0.005, 0.01, 0.1, 1.0)
 
-    tx = gh.t_x
-    ty = gh.t_y
+    
+
+    theta = gh.theta
 
     loc = glGetUniformLocation(program, "mat_transformation")
     
@@ -124,8 +128,13 @@ while not glfw.window_should_close(window):
 
     # Ship
     mat_transform = trans.createEyeMat()
+    mat_transform = trans.translate(-0.05, -0.05, mat_transform)
     mat_transform = trans.scale(2, 2, mat_transform)
-    mat_transform = trans.translate(tx, ty, mat_transform)
+    mat_transform = trans.rotateZ(theta, mat_transform)
+
+    tx = tx + 0.00*np.cos(theta) - 0.001*np.sin(theta)
+    ty = ty + 0.00*np.sin(theta) + 0.001*np.cos(theta)
+    mat_transform = trans.translate( tx, ty, mat_transform)
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
     R, G, B = 1, 0, 0
     glUniform4f(loc_color, R, G, B, 1.0)
