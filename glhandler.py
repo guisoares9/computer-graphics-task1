@@ -11,6 +11,7 @@ dtheta = 0
 # Capturando eventos de teclado e mouse
 def key_event(window,key,scancode,action,mods):
     
+    # Ship states
     global dt_x, dt_y, dtheta
 
     if (key == 265) | (key == 87):
