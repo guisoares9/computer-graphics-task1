@@ -54,7 +54,10 @@ B = 0
 tx = 0
 ty = 0
 theta = 0
-
+last_tx = 0
+last_ty = 0
+tx_planeta = 0
+ty_planeta = 0
 glfw.show_window(window)
 
 t0 = time.time()
@@ -66,30 +69,49 @@ while not glfw.window_should_close(window):
     glClear(GL_COLOR_BUFFER_BIT)
     glClearColor(0.005, 0.01, 0.1, 1.0)
 
-
-    
-
     loc = glGetUniformLocation(program, "mat_transformation")
-    
+
+    theta += gh.dtheta
+    if 1 > abs(tx + gh.dt_x*np.cos(theta) - gh.dt_y*np.sin(theta)):
+        tx = tx + gh.dt_x*np.cos(theta) - gh.dt_y*np.sin(theta)
+    if 1 > abs(ty + gh.dt_x*np.sin(theta) + gh.dt_y*np.cos(theta)):
+        ty = ty + gh.dt_x*np.sin(theta) + gh.dt_y*np.cos(theta)
+
+    tx_planeta = -tx
+    ty_planeta = -ty
+    d_sun = np.sqrt((tx_planeta-0.7)**2+(ty_planeta+0.7)**2)
+    d_planeta = np.sqrt((tx_planeta)**2+(ty_planeta)**2)
+    last_tx = tx
+    last_ty = ty
+
+    gh.dt_x = 0
+    gh.dt_y = 0
+    gh.dtheta = 0
+
 # Stars
     mat_transform = trans.createEyeMat()
-    # #mat_transform = trans.scale(1/(d+2), 1/(d+2), mat_transform)
     mat_transform = trans.scale(1, 1, mat_transform)
     mat_transform = trans.translate(0, 0, mat_transform)
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
-    # mat_transform = trans.scale(-d, -d, mat_transform)
-    # glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
+
 
     R, G, B = 1, 1, 1
     glUniform4f(loc_color, R, G, B, 1.0)
     glDrawArrays(GL_POINTS, 0, len(stars))
+# Sun
+    mat_transform = trans.createEyeMat()
+    mat_transform = trans.scale(0.3/(d_sun+.001), 0.3/(d_sun+.001), mat_transform)
+    mat_transform = trans.translate(-0.7+tx_planeta/10, 0.7+ty_planeta/10, mat_transform)
+    glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
+    R, G, B = 1, 0.7, 0
+    glUniform4f(loc_color, R, G, B, 1.0)
+    glDrawArrays(GL_TRIANGLE_FAN, len(stars) + len(planet) + len(continent), len(sun))
 
 # Planet
     d = tx**2 + ty**2
     mat_transform = trans.createEyeMat()
-    # mat_transform = trans.scale(1/(d+2), 1/(d+2), mat_transform)
-    mat_transform = trans.scale(.5,.5, mat_transform)
-    mat_transform = trans.translate(0, -0.5, mat_transform)
+    mat_transform = trans.scale(.5/(5*d_planeta**4+1), .5/(5*d_planeta**4+1), mat_transform)
+    mat_transform = trans.translate(0+tx_planeta, -0.5+ty_planeta, mat_transform)
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
     R, G, B = 0, 0, 1
     glUniform4f(loc_color, R, G, B, 1.0)
@@ -97,30 +119,22 @@ while not glfw.window_should_close(window):
 
 # Continent
     mat_transform = trans.createEyeMat()
-    # mat_transform = trans.scale(1/(d+2), 1/(d+2), mat_transform)
-    mat_transform = trans.scale(0.48, 0.48, mat_transform)
-    mat_transform = trans.translate(0, -0.5, mat_transform)
+    mat_transform = trans.scale(0.48/(5*d_planeta**4+1), 0.48/(5*d_planeta**4+1), mat_transform)
+    mat_transform = trans.translate(0+tx_planeta, -0.5+ty_planeta, mat_transform)
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
     R, G, B = 0, 1, 0
     glUniform4f(loc_color, R, G, B, 1.0)
     glDrawArrays(GL_TRIANGLES, len(planet)+len(stars), len(continent))
 
-# Sun
-    mat_transform = trans.createEyeMat()
-    mat_transform = trans.scale(0.15, 0.15, mat_transform)
-    mat_transform = trans.translate(-0.7, 0.7, mat_transform)
-    glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
-    R, G, B = 1, 0.7, 0
-    glUniform4f(loc_color, R, G, B, 1.0)
-    glDrawArrays(GL_TRIANGLE_FAN, len(stars) + len(planet) + len(continent), len(sun))
 
 # Moon
-    t = time.time() - t0    
+    t = time.time() - t0
     mat_transform = trans.createEyeMat()
     mat_transform = trans.scale(0.15, 0.15, mat_transform)
     mat_transform = trans.translate(0.9, 0, mat_transform)
     mat_transform = trans.rotateZ(t, mat_transform)
-    mat_transform = trans.translate(0.0, -0.5, mat_transform)
+    mat_transform = trans.scale(1/(5*d_planeta**4+1), 1/(5*d_planeta**4+1), mat_transform)
+    mat_transform = trans.translate(0.0+tx_planeta, -0.5+ty_planeta, mat_transform)
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
     R, G, B = 0.3, 0.3, 0.3
     glUniform4f(loc_color, R, G, B, 1.0)
@@ -132,15 +146,7 @@ while not glfw.window_should_close(window):
     mat_transform = trans.scale(2, 2, mat_transform)
     mat_transform = trans.rotateZ(theta, mat_transform)
 
-    tx = tx + gh.dt_x*np.cos(theta) - gh.dt_y*np.sin(theta)
-    ty = ty + gh.dt_x*np.sin(theta) + gh.dt_y*np.cos(theta)
-    theta += gh.dtheta    
-
-    gh.dt_x = 0
-    gh.dt_y = 0
-    gh.dtheta = 0
-    
-    mat_transform = trans.translate( tx, ty, mat_transform)
+    mat_transform = trans.translate(tx, ty, mat_transform)
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
     R, G, B = 1, 0, 0
     glUniform4f(loc_color, R, G, B, 1.0)
