@@ -7,7 +7,7 @@ import glfw
 from OpenGL.GL import *
 
 # Sets the window
-window = gh.setWindow(700, 700, "Triangle")
+window = gh.setWindow(800, 800, "Move: WASD or ArrowKeys, Rotate: to left Q and to right E")
 
 # Configure shaders and construct variables
 program = gh.setGPU()

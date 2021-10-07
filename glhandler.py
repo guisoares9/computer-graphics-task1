@@ -11,13 +11,13 @@ def key_event(window,key,scancode,action,mods):
     
     global t_x, t_y
 
-    if (key == 265):
+    if (key == 265) | (key == 87):
         t_y += 0.02
-    if (key == 264):
+    if (key == 264) | (key == 83):
         t_y -= 0.02
-    if (key == 263):
+    if (key == 263) | (key == 65):
         t_x -= 0.02
-    if (key == 262):
+    if (key == 262) | (key == 68):
         t_x += 0.02
 
     print('[key event] key=',key)
