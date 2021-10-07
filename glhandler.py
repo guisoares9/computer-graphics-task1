@@ -13,19 +13,19 @@ def key_event(window,key,scancode,action,mods):
     
     # Ship states
     global dt_x, dt_y, dtheta
-
-    if (key == 265) | (key == 87):
-        dt_y = +0.02
-    if (key == 264) | (key == 83):
-        dt_y = -0.02
-    if (key == 263) | (key == 65):
-        dt_x = -0.02
-    if (key == 262) | (key == 68):
-        dt_x = +0.02
-    if (key == 81):
-        dtheta = +0.1
-    if (key == 69):
-        dtheta = -0.1
+    if action!=0:
+        if (key == 265) | (key == 87):
+            dt_y = +0.02
+        if (key == 264) | (key == 83):
+            dt_y = -0.02
+        if (key == 263) | (key == 65):
+            dt_x = -0.02
+        if (key == 262) | (key == 68):
+            dt_x = +0.02
+        if (key == 81):
+            dtheta = +0.1
+        if (key == 69):
+            dtheta = -0.1
 
 
     print('[key event] key=',key)

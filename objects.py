@@ -1,16 +1,26 @@
 import numpy as np
 
-def __triangularization(points, center):
+# This function solves the problem to fill complex figures
+# by calculating it barycenter and generating triangles
+def __triangularization(points):
 
+    # Duplicates the inner vertices
     aux = []
     for i in range(len(points)):
         aux.append(points[i])
         aux.append(points[i])
-
     points = aux.copy()
     points.pop(0)
     points.pop(len(points)-1)
 
+    # Calculates the barycenter of the figure
+    medX, medY = 0, 0
+    for i in range(len(points)):
+        medX += points[i][0]
+        medY += points[i][1]
+    center = (medX/len(points), medY/len(points))
+
+    # Append to agroup triplets of points (triangles)
     for i in range(len(aux), 0, -1):
         if (i%2 == 0) & (i != 0) & (i != len(aux)):
             points.insert(i, center)
@@ -27,8 +37,6 @@ def Planet():
     return planet
 
 def Continent():
-
-    center = (0.1710380932967, -0.3962519254644)
 
     southAmerica = [
         (0.0579357315266, -0.9068283014548),
@@ -55,9 +63,7 @@ def Continent():
         (0, -0.8665347882596),
         (0.0579357315266, -0.9068283014548)]
 
-    continent = __triangularization(southAmerica, center)
-
-    center = (-0.2792724814426, 0.0984019189911)
+    continent = __triangularization(southAmerica)
 
     centralAmerica = [
         (-0.1451615223118, -0.049582587636),
@@ -77,9 +83,7 @@ def Continent():
         (-0.2260905493735, -0.0125864609792),
         (-0.1451615223118, -0.049582587636) ]
 
-    continent += __triangularization(centralAmerica, center)
-
-    center = (-0.3434441034514, 0.5695960790357)
+    continent += __triangularization(centralAmerica)
 
     northAmerica = [
         (-0.3763873139166, 0.144647077312),
@@ -122,7 +126,7 @@ def Continent():
         (-0.3763873139166, 0.144647077312)
         ]
 
-    continent += __triangularization(northAmerica, center)
+    continent += __triangularization(northAmerica)
 
     return np.array(continent)
 
