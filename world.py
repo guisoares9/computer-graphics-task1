@@ -1,6 +1,6 @@
 import numpy as np
 
-def getWorldPoints():
+def getPoints():
     world = [
         (0.1255581498995, -0.9347072861906),
         (0.0720809719474, -0.8478068720184),

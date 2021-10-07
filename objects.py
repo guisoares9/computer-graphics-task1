@@ -1,7 +1,5 @@
 import numpy as np
 
-
-
 def simpleTest():
 
     points =    [(1.0,1.0,1.0),
