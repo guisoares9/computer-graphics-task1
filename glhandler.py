@@ -8,9 +8,10 @@ dtheta = 0
 
 dtheta = 0
 
-# Capturando eventos de teclado e mouse
+# Catching keyboard events 
 def key_event(window,key,scancode,action,mods):
     
+    # Ship states
     global dt_x, dt_y, dtheta
     if action!=0:
         if (key == 265) | (key == 87):
@@ -33,6 +34,7 @@ def key_event(window,key,scancode,action,mods):
     print('[key event] mods=',mods)
     print('-------')
 
+# Catching mouse events
 def mouse_event(window,button,action,mods):
     print('[mouse event] button=',button)
     print('[mouse event] action=',action)
@@ -40,7 +42,7 @@ def mouse_event(window,button,action,mods):
     print('-------')
 
 def setWindow(width, height, name):
-    # Inicializando janela
+    # Initializing window
     glfw.init()
     glfw.window_hint(glfw.VISIBLE, glfw.FALSE);
     window = glfw.create_window(width, height, name, None, None)
@@ -127,47 +129,3 @@ def setGPUBuffer(program, vertices ):
     glEnableVertexAttribArray(loc)
 
     glVertexAttribPointer(loc, 2, GL_FLOAT, False, stride, offset)
-
-if __name__ == '__main__':
-
-
-    # Sets the window
-    window = setWindow(600, 600, "Triangle")
-
-    # Configure shaders and construct variables
-    program = setGPU()
-
-    vertices = np.zeros(6, [("position", np.float32, 2)])
-    # preenchendo as coordenadas de cada vértice
-    vertices['position'] = [
-                            ( 0.0, 0.0), # vertice 0
-                            (+0.5,+0.5), # vertice 1
-                            (+0.5, 0.0), # vertice 2
-                            (-1.0,-1.0), # vertice 3
-                            (-0.5, 0.0), # vertice 4
-                            (+1.0,-1.0)  # vertice 5
-                        ]
-
-    # Sets the GPU Buffer
-    setGPUBuffer( program, vertices )
-
-
-    loc_color = glGetUniformLocation(program, "color")
-
-    glfw.show_window(window)
-
-    while not glfw.window_should_close(window):
-
-        glfw.poll_events() 
-        
-        glClear(GL_COLOR_BUFFER_BIT)
-    
-        glClearColor(1.0, 1.0, 1.0, 1.0)
-
-        glUniform4f(loc_color, 0.0, 1.0, 1.0, 1.0) 
-        
-        glDrawArrays(GL_TRIANGLES, 0, len(vertices)) 
-
-        glfw.swap_buffers(window)
-
-    glfw.terminate()

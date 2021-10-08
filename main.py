@@ -109,8 +109,11 @@ while not glfw.window_should_close(window):
 
 # Sun
     mat_transform = trans.createEyeMat()
+    # Scale depends to the ship distance from the sun
     mat_transform = trans.scale(0.3/(d_sun+.001), 0.3/(d_sun+.001), mat_transform)
+    # Translation depends to the position of the ship
     mat_transform = trans.translate(-0.7+tx_planet/10, 0.7+ty_planet/10, mat_transform)
+
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
     R, G, B = 1, 0.7, 0
     glUniform4f(loc_color, R, G, B, 1.0)
@@ -120,7 +123,9 @@ while not glfw.window_should_close(window):
 # Planet
     d = tx**2 + ty**2
     mat_transform = trans.createEyeMat()
+    # Scale depends to the ship distance from the planet
     mat_transform = trans.scale(.5/(5*d_planet**4+1), .5/(5*d_planet**4+1), mat_transform)
+    # Translation depends to the position of the ship
     mat_transform = trans.translate(0+tx_planet, -0.5+ty_planet, mat_transform)
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
     R, G, B = 0, 0, 1
@@ -129,7 +134,9 @@ while not glfw.window_should_close(window):
 
 # Continent
     mat_transform = trans.createEyeMat()
+    # Scale depends to the ship distance from the planet
     mat_transform = trans.scale(0.48/(5*d_planet**4+1), 0.48/(5*d_planet**4+1), mat_transform)
+    # Translation depends to the position of the ship
     mat_transform = trans.translate(0+tx_planet, -0.5+ty_planet, mat_transform)
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
     R, G, B = 0, 1, 0
@@ -140,10 +147,15 @@ while not glfw.window_should_close(window):
 # Moon
     t = time.time() - t0
     mat_transform = trans.createEyeMat()
+    # First scale
     mat_transform = trans.scale(0.15, 0.15, mat_transform)
+    # Trasnlation that indicates the rotation radius
     mat_transform = trans.translate(0.9, 0, mat_transform)
+    # Function of time rotation
     mat_transform = trans.rotateZ(t, mat_transform)
+    # Same planet and cointinent scale
     mat_transform = trans.scale(1/(5*d_planet**4+1), 1/(5*d_planet**4+1), mat_transform)
+    # Translation that indicates the rotation axis 
     mat_transform = trans.translate(0.0+tx_planet, -0.5+ty_planet, mat_transform)
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
     R, G, B = 0.3, 0.3, 0.3

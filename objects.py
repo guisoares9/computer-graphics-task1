@@ -28,8 +28,9 @@ def __triangularization(points):
     return points
 
 def Planet():
+    # Earth points
     planet = np.zeros((101,2))
-    # preenchendo as coordenadas do pentagrama
+    # Making a circle
     for counter in range(101):
         angle = (2 * np.pi / 100) * counter
         x,y = np.cos(angle),  np.sin(angle)
@@ -38,6 +39,7 @@ def Planet():
 
 def Continent():
 
+    # South America corners
     southAmerica = [
         (0.0579357315266, -0.9068283014548),
         (0.0981462836543, -0.8099458674214),
@@ -65,6 +67,7 @@ def Continent():
 
     continent = __triangularization(southAmerica)
 
+    # Central America corners
     centralAmerica = [
         (-0.1451615223118, -0.049582587636),
         (-0.1004075749514, -0.0375558638509),
@@ -85,6 +88,7 @@ def Continent():
 
     continent += __triangularization(centralAmerica)
 
+    # North America corners
     northAmerica = [
         (-0.3763873139166, 0.144647077312),
         (-0.540557625956, 0.1562083668922),
@@ -131,9 +135,9 @@ def Continent():
     return np.array(continent)
 
 def Sun():
-    
+    # Sun points
     sun = np.zeros((101,2))
-    # preenchendo as coordenadas do pentagrama
+    # Making a circle
     for counter in range(101):
         angle = (2 * np.pi / 100) * counter
         x,y = np.cos(angle),  np.sin(angle)
@@ -141,16 +145,18 @@ def Sun():
     return sun
 
 def Moon():
-    
+    # Moon points
     moon = np.zeros((101,2))
-    # preenchendo as coordenadas do pentagrama
+    # Making a circle
     for counter in range(101):
         angle = (2 * np.pi / 100) * counter
         x,y = np.cos(angle),  np.sin(angle)
         moon[counter] = [x,y]
     return moon
 
+
 def Ship():
+    # Ship points
     ship =  [
     (0.0, +0),
     (+0.05, 0.1),
@@ -163,5 +169,6 @@ def Ship():
     return np.array(ship)
 
 def Stars():
+    # Star points
     stars = 100*(np.random.rand(1000000, 2))-100*(np.random.rand(1000000, 2))
     return np.array(stars)

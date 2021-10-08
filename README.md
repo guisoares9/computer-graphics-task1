@@ -8,7 +8,7 @@ The whole program was made in python3. Here is what you need to get to run our s
 ```py
 pip install numpy
 pip install glfw
-pip install OpenGL
+pip install pyopengl
 ```
 
 And we execute by double clicking ``main.py`` or the terminal command ``python main.py`` 
