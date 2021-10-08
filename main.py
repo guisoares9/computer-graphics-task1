@@ -141,7 +141,7 @@ while not glfw.window_should_close(window):
     glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
     R, G, B = 0, 1, 0
     glUniform4f(loc_color, R, G, B, 1.0)
-    glDrawArrays(GL_LINE_LOOP, len(planet)+len(stars), len(continent))
+    glDrawArrays(GL_TRIANGLES, len(planet)+len(stars), len(continent))
     # the planet and the continents gets farther and smaller as the ship moves downard and to the left
 
 # Moon
