@@ -8,9 +8,10 @@ dtheta = 0
 
 dtheta = 0
 
-# Capturando eventos de teclado e mouse
+# Catching keyboard events 
 def key_event(window,key,scancode,action,mods):
     
+    # Ship states
     global dt_x, dt_y, dtheta
     if action!=0:
         if (key == 265) | (key == 87):
@@ -33,6 +34,7 @@ def key_event(window,key,scancode,action,mods):
     print('[key event] mods=',mods)
     print('-------')
 
+# Catching mouse events
 def mouse_event(window,button,action,mods):
     print('[mouse event] button=',button)
     print('[mouse event] action=',action)
@@ -40,7 +42,7 @@ def mouse_event(window,button,action,mods):
     print('-------')
 
 def setWindow(width, height, name):
-    # Inicializando janela
+    # Initializing window
     glfw.init()
     glfw.window_hint(glfw.VISIBLE, glfw.FALSE);
     window = glfw.create_window(width, height, name, None, None)
